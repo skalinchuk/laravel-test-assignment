@@ -1,66 +1,403 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Credit System API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern credit lending system built with Laravel 11, implementing Domain-Driven Design (DDD), Clean Architecture, and SOLID principles. The system provides a comprehensive solution for managing client registration, credit eligibility assessment, and credit application processing.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Client Management**: Register and manage client information with validation
+- **Credit Products**: Support for multiple credit products with configurable terms
+- **Configurable Business Rules**: Flexible rule-based credit approval system via environment variables
+- **Application Processing**: Complete credit application workflow with automated notifications
+- **Audit Trail**: Full tracking of application status and decision reasons
+- **Environment-Based Configuration**: Easy adjustment of business rules without code changes
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Architecture
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The project follows Clean Architecture principles with clear separation of concerns:
 
-## Learning Laravel
+- **Domain Layer**: Contains business entities, value objects, and domain services
+- **Application Layer**: Implements use cases and application services
+- **Infrastructure Layer**: Handles data persistence and external integrations
+- **Web Layer**: REST API controllers and request validation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Key Design Patterns
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Domain-Driven Design (DDD)**: Rich domain models with business logic encapsulation
+- **SOLID Principles**: Single responsibility, dependency inversion, and interface segregation
+- **Strategy Pattern**: Pluggable credit approval rules
+- **Repository Pattern**: Abstraction for data access
+- **Command Query Separation**: Clear distinction between commands and queries
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requirements
 
-## Laravel Sponsors
+- PHP 8.3+
+- Composer
+- Laravel 11
+- Docker (optional)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Required PHP Extensions
+- mbstring
+- fileinfo
+- json
+- openssl
 
-### Premium Partners
+### Development Dependencies
+- PHPStan (static analysis)
+- Psalm (static analysis)
+- PHP CS Fixer (code style)
+- PHPUnit (testing)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Installation
 
-## Contributing
+### Local Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd credit-system
+   ```
 
-## Code of Conduct
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   # Edit .env file to adjust credit system settings if needed
+   ```
 
-## Security Vulnerabilities
+4. **Create storage directories and configure environment**
+   ```bash
+   mkdir -p storage/app/private
+   chmod -R 755 storage
+   chmod -R 755 bootstrap/cache
+   
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. **Generate application key**
+   ```bash
+   php artisan key:generate
+   ```
 
-## License
+6**Start the development server**
+   ```bash
+   php artisan serve
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The API will be available at `http://localhost:8000`
+
+### Quick Setup with Makefile
+
+```bash
+# Complete setup in one command
+make dev-setup
+
+# Then start the server
+php artisan serve
+```
+
+### Docker Installation
+
+1. **Build and start containers**
+   ```bash
+   docker compose up -d --build
+   ```
+
+2. **Install dependencies inside container**
+   ```bash
+   docker compose exec app composer install
+   docker compose exec app php artisan key:generate
+   ```
+
+The API will be available at `http://localhost:8080`
+
+### Docker Quick Setup
+```bash
+# Complete Docker setup
+make docker-setup
+```
+
+## API Endpoints
+
+### Clients
+
+- `POST /api/v1/clients` - Create a new client
+
+### Credits
+
+- `POST /api/v1/credits/check-eligibility` - Check credit eligibility
+- `POST /api/v1/credits/apply` - Submit credit application
+
+### Example Requests
+
+#### Create Client
+```bash
+curl -X POST http://localhost:8000/api/v1/clients \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "age": 35,
+    "region": "PR",
+    "income": 1500,
+    "score": 650,
+    "pin": "123-45-6789",
+    "email": "john.doe@example.com",
+    "phone": "+420123456789"
+  }'
+```
+
+#### Check Credit Eligibility
+```bash
+curl -X POST http://localhost:8000/api/v1/credits/check-eligibility \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "client-uuid-here",
+    "credit_id": "personal-loan"
+  }'
+```
+
+#### Apply for Credit
+```bash
+curl -X POST http://localhost:8000/api/v1/credits/apply \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client_id": "client-uuid-here",
+    "credit_id": "personal-loan"
+  }'
+```
+
+## Data Storage
+
+The system uses JSON files for data persistence, stored in `storage/app/private/`:
+
+- `clients.json` - Client information
+- `credits.json` - Available credit products
+- `credit_applications.json` - Credit applications and their status
+
+Default credit products are automatically created on first run.
+
+## Testing
+
+### Run Unit Tests
+```bash
+php artisan test --testsuite=Unit
+```
+
+### Run Feature Tests
+```bash
+php artisan test --testsuite=Feature
+```
+
+### Run All Tests
+```bash
+php artisan test
+```
+
+### Docker Testing
+```bash
+docker compose exec app php artisan test
+```
+
+### Using Makefile (Optional)
+If you prefer using make commands:
+```bash
+# Setup project
+make install
+
+# Run tests
+make test
+
+# Run all quality checks
+make quality
+
+# Fix code style
+make cs-fix
+```
+
+## Code Quality
+
+### Run All Quality Checks
+```bash
+composer run quality
+```
+
+### Individual Quality Tools
+
+#### Static Analysis with PHPStan
+```bash
+composer run phpstan
+# or directly: ./vendor/bin/phpstan analyse
+```
+
+#### Psalm Static Analysis
+```bash
+composer run psalm
+# or directly: ./vendor/bin/psalm
+```
+
+#### Auto-fix Code Style
+```bash
+composer run cs-fix
+# or directly: ./vendor/bin/pint
+```
+
+## Project Structure
+
+```
+app/
+├── Application/           # Use cases and application services
+│   ├── Client/
+│   ├── Credit/
+│   └── CreditApplication/
+├── Domain/               # Domain entities and business logic
+│   ├── Client/
+│   ├── Credit/
+│   ├── CreditApplication/
+│   └── Notification/
+├── Http/                 # Web layer (controllers, requests)
+│   ├── Controllers/
+│   └── Requests/
+├── Infrastructure/       # External concerns (persistence, notifications)
+│   ├── Notification/
+│   └── Persistence/
+└── Providers/           # Service providers and DI configuration
+```
+
+## Configuration
+
+### Environment Variables
+
+The system is highly configurable through environment variables. Key settings in `.env`:
+
+```env
+# Application
+APP_NAME="Credit System"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# Credit System Business Rules
+CREDIT_MIN_AGE=18
+CREDIT_MAX_AGE=60
+CREDIT_MIN_SCORE=500
+CREDIT_MIN_INCOME=1000
+CREDIT_ALLOWED_REGIONS="PR,BR,OS"
+CREDIT_OSTRAVA_RATE_INCREASE=5.0
+
+# Feature Toggles
+CREDIT_PRAGUE_RANDOM_REJECTION=true
+CREDIT_NOTIFICATIONS_ENABLED=true
+
+# Logging
+LOG_CHANNEL=stack
+LOG_LEVEL=debug
+```
+
+### Business Rules Configuration
+
+You can easily adjust the credit approval criteria by modifying environment variables:
+
+| Variable | Description | Default | Example |
+|----------|-------------|---------|---------|
+| `CREDIT_MIN_AGE` | Minimum client age | 18 | 21 |
+| `CREDIT_MAX_AGE` | Maximum client age | 60 | 65 |
+| `CREDIT_MIN_SCORE` | Minimum credit score | 500 | 600 |
+| `CREDIT_MIN_INCOME` | Minimum monthly income | 1000 | 1500 |
+| `CREDIT_ALLOWED_REGIONS` | Comma-separated regions | "PR,BR,OS" | "PR,BR,OS,PL" |
+| `CREDIT_OSTRAVA_RATE_INCREASE` | Rate increase for Ostrava | 5.0 | 3.0 |
+| `CREDIT_PRAGUE_RANDOM_REJECTION` | Enable Prague random rejection | true | false |
+| `CREDIT_NOTIFICATIONS_ENABLED` | Enable notifications | true | false |
+
+### Service Provider Registration
+
+Add to `config/app.php`:
+```php
+'providers' => [
+    // ...
+    App\Providers\CreditSystemServiceProvider::class,
+],
+```
+
+### Publishing Configuration
+
+To customize advanced settings, publish the configuration file:
+```bash
+php artisan vendor:publish --tag=credit-config
+```
+
+This creates `config/credit.php` where you can define more complex business rules.
+
+## Logs
+
+Application logs are stored in `storage/logs/laravel.log`. Credit application notifications are logged automatically for audit purposes.
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Permission errors**
+   ```bash
+   sudo chown -R $USER:$USER storage bootstrap/cache
+   chmod -R 755 storage bootstrap/cache
+   ```
+
+2. **JSON file errors**
+   ```bash
+   mkdir -p storage/app/private
+   chmod 755 storage/app/private
+   ```
+
+3. **Configuration cache issues**
+   ```bash
+   php artisan config:clear
+   php artisan config:cache
+   ```
+
+4. **Composer dependency issues**
+   ```bash
+   composer clear-cache
+   composer install --no-cache
+   ```
+
+5. **Docker permission issues**
+   ```bash
+   docker compose exec app chown -R www:www /var/www/storage
+   ```
+
+### Development Tips
+
+- Use `php artisan log:clear` to clear logs
+- Check `storage/logs/laravel.log` for application logs
+- Credit notifications are logged for debugging
+- JSON files in `storage/app/private/` can be manually inspected
+- Use `php artisan config:show credit` to view current configuration
+- Modify `.env` variables and restart server to apply changes
+
+### Configuration Examples
+
+#### Stricter Requirements
+```env
+CREDIT_MIN_AGE=25
+CREDIT_MIN_SCORE=650
+CREDIT_MIN_INCOME=2000
+CREDIT_PRAGUE_RANDOM_REJECTION=false
+```
+
+#### Development/Testing Mode
+```env
+CREDIT_MIN_AGE=18
+CREDIT_MIN_SCORE=300
+CREDIT_MIN_INCOME=500
+CREDIT_NOTIFICATIONS_ENABLED=false
+```
+
+### Development Workflow
+
+```bash
+# Before committing
+make quality          # Run all quality checks
+php artisan test     # Run tests
+make cs-fix          # Fix code style issues
+```
